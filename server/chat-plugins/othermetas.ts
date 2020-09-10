@@ -275,6 +275,37 @@ export const commands: ChatCommands = {
 	},
 	stonehelp: [`/stone <mega stone>[, generation] - Shows the changes that a mega stone/orb applies to a Pokemon.`],
 
+	bnb: 'badnboosted',
+	'badnboosted'(target, room, user) {
+		if (!this.runBroadcast()) return;
+		const args = target.split(',');
+		if (!toID(args[0])) return this.parse('/help badnboosted');
+		let dex = Dex;
+		if (args[1] && toID(args[1]) in Dex.dexes) {
+			dex = Dex.dexes[toID(args[1])];
+		} else if (room?.battle) {
+			const format = Dex.getFormat(room.battle.format);
+			dex = Dex.mod(format.mod);
+		}
+		const species = Utils.deepClone(dex.getSpecies(args[0]));
+		if (!species.exists || species.gen > dex.gen) {
+			const monName = species.gen > dex.gen ? species.name : args[0].trim();
+			const additionalReason = species.gen > dex.gen ? ` in Generation ${dex.gen}` : ``;
+			return this.errorReply(`Error: Pok\u00e9mon '${monName}' not found${additionalReason}.`);
+		}
+		const bst = species.bst;
+		species.bst = 0;
+		for (const i in species.baseStats) {
+			if (dex.gen === 1 && i === 'spd') continue;
+			species.baseStats[i] = species.baseStats[i] * (species.baseStats[i] <= 70 ? 2 : 1);
+			species.bst += species.baseStats[i];
+		}
+		this.sendReply(`|html|${Chat.getDataPokemonHTML(species, dex.gen)}`);
+	},
+	'350cuphelp': [
+		`/350 OR /350cup <pokemon>[, gen] - Shows the base stats that a Pok\u00e9mon would have in 350 Cup.`,
+	],
+
 	350: '350cup',
 	'350cup'(target, room, user) {
 		if (!this.runBroadcast()) return;

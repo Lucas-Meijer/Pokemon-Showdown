@@ -13,6 +13,14 @@ export const Formats: {[k: string]: FormatData} = {
 			'Obtainable', 'Team Preview', 'Sleep Clause Mod', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod',
 		],
 	},
+	timemachine: {
+		effectType: 'ValidatorRule',
+		name: 'Time Machine',
+		desc: "Ability to use new Pokemon in old generations.",
+		ruleset: [
+			'+Future', 'No Future Moves', 'No Future Abilities', 'No Future Items', 'Allow Tradeback'
+		],
+	},
 	standardnext: {
 		effectType: 'ValidatorRule',
 		name: 'Standard NEXT',
@@ -985,6 +993,65 @@ export const Formats: {[k: string]: FormatData} = {
 			return this.checkLearnset(move, species, setSources, set);
 		},
 	},
+
+	nofuturemons: {
+		effectType: 'ValidatorRule',
+		name: 'No Future Mons',
+		desc: "Does not allow Pokemon from later gens",
+		onValidateSet(set) {
+			const problems: string[] = [];
+			if (set.species) {
+				const pokemon = this.dex.getSpecies(set.species);
+				if (pokemon.gen > this.gen) problems.push(move.name + ' is not available in this generation.');
+			}
+			return problems;
+		},
+	},
+
+	nofuturemoves: {
+		effectType: 'ValidatorRule',
+		name: 'No Future Moves',
+		desc: "Does not allow moves from later gens",
+		onValidateSet(set) {
+			const problems: string[] = [];
+			if (set.moves) {
+				for (const moveId of set.moves) {
+					const move = this.dex.getMove(moveId);
+					if (move.gen > this.gen) problems.push(move.name + ' is not available in this generation.');
+				}
+			}
+			return problems;
+		},
+	},
+
+	nofutureabilities: {
+		effectType: 'ValidatorRule',
+		name: 'No Future Abilities',
+		desc: "Does not allow moves from later gens",
+		onValidateSet(set) {
+			const problems: string[] = [];
+			if (set.ability) {
+				const ability = this.dex.getAbility(set.ability);
+				if (ability.gen > this.gen) problems.push(ability.name + ' is not available in this generation.');
+			}
+			return problems;
+		},
+	},
+
+	nofutureitems: {
+		effectType: 'ValidatorRule',
+		name: 'No Future Items',
+		desc: "Does not allow items from later gens",
+		onValidateSet(set) {
+			const problems: string[] = [];
+			if (set.item) {
+				const item = this.dex.getItem(set.item);
+				if (item.gen > this.gen) problems.push(item.name + ' is not available in this generation.');
+			}
+			return problems;
+		},
+	},
+
 	allowtradeback: {
 		effectType: 'ValidatorRule',
 		name: 'Allow Tradeback',
@@ -1064,6 +1131,25 @@ export const Formats: {[k: string]: FormatData} = {
 			return newSpecies;
 		},
 	},
+	'badnboostedmod': {
+		effectType: 'Rule',
+		name: 'Bad \'n Boosted Mod',
+		desc: "If a stat is 70 or lower, it gets doubled.",
+		onBegin() {
+			this.add('rule', 'Bad \'n Boosted Mod: If a stat is 70 or lower, it gets doubled.');
+		},
+		onModifySpecies(species) {
+			const newSpecies = this.dex.deepClone(species);
+			newSpecies.bst = 0;
+			for (const stat in newSpecies.baseStats) {
+				if (newSpecies.baseStats[stat] <= 70) {
+					newSpecies.baseStats[stat] = newSpecies.baseStats[stat] * 2;
+				}
+				newSpecies.bst += newSpecies.baseStats[stat];
+			}
+			return newSpecies;
+		},
+	},
 	flippedmod: {
 		effectType: 'Rule',
 		name: 'Flipped Mod',
@@ -1098,6 +1184,82 @@ export const Formats: {[k: string]: FormatData} = {
 				newSpecies.bst += newSpecies.baseStats[stat];
 			}
 			return newSpecies;
+		},
+	},
+
+	birthrightmod: {
+		effectType: 'ValidatorRule',
+		name: 'Birthright Mod',
+		desc: "Only allows level-up and egg moves.",
+		onValidateSet(set) {
+			const problems: string[] = [];
+			const baseSpecies: Species | null = this.dex.getSpecies(set.species);
+			var species: Species | null = baseSpecies;
+
+			if (set.moves) {
+				for (const moveId of set.moves) {
+					species = baseSpecies;
+					const move = this.dex.getMove(moveId);
+					var canUse = false;
+
+					do {
+						var lsetData = this.dex.getLearnsetData(species.id);
+						if (lsetData.learnset && lsetData.learnset[move.id]) {
+							for (const moveSource of lsetData.learnset[move.id]) {
+								if (parseInt(moveSource.charAt(0)) === this.dex.gen && (moveSource.charAt(1) === 'E' || moveSource.charAt(1) === 'L')) canUse = true;
+							}
+						}
+						species = this.dex.getSpecies(species.prevo);
+					} while (species != "")
+					if (!canUse) problems.push(move.name + ' is not available as a level-up or egg move in Generation 8.');
+				}
+			}
+
+			return problems;
+		},
+	},
+
+	movepoolmod: {
+		effectType: 'ValidatorRule',
+		name: 'Move Pool Mod',
+		desc: "Pokemon can use moves from teammates.",
+		checkLearnset(move, species, setSources, set) {
+			return null;
+		},
+		onValidateTeam(team) {
+			const problems: string[] = [];
+			const moveTable: Set<Move> = new Set();
+			for (const set of team) {
+				for (const moveId of set.moves) {
+					const move = this.dex.getMove(moveId);
+					if (moveTable.has(move)) continue;
+
+					var learnCounter = 0;
+					var useCounter = 0;
+
+					for (const otherSet of team) {
+						var species = this.dex.getSpecies(otherSet.species);
+
+						do {
+							var lsetData = this.dex.getLearnsetData(species.id);
+							if (lsetData.learnset && lsetData.learnset[move.id]) {
+								learnCounter++;
+								break;
+							}
+							species = this.dex.getSpecies(species.prevo);
+						} while (species != "")
+
+						for (const otherMoveId of otherSet.moves)
+							if (otherMoveId == moveId) useCounter++; // count usage of move
+					}
+
+					if (useCounter > learnCounter) problems.push(move.name + ' can only be learned by ' + learnCounter +
+						' Pokemon on this team, but is used by ' + useCounter + ' Pokemon.');
+
+					moveTable.add(move);
+				}
+			}
+			return problems;
 		},
 	},
 };

@@ -1563,12 +1563,140 @@ export const Formats: FormatList = [
 		ruleset: ['Obtainable', 'HP Percentage Mod', 'Cancel Mod'],
 	},
 
+
+	// Custom Metas
+	///////////////////////////////////////////////////////////////////
+
+	{
+		section: "Custom Metas",
+		column: 3,
+	},
+	{
+		name: "[Gen 8] Bad 'n Boosted",
+		desc: `Stats of 70 or less are doubled.`,
+
+		mod: 'gen8',
+		ruleset: ['Bad \'n Boosted Mod', 'Standard', 'Dynamax Clause'],
+		banlist: ['Eviolite'],
+	},
+	{
+		name: "[Gen 8] Birthright",
+		desc: `Only level-up and egg moves are allowed.`,
+
+		mod: 'gen8',
+		ruleset: ['Birthright Mod', 'Standard', 'Dynamax Clause'],
+		banlist: [],
+	},
+	{
+		name: "[Gen 8] Move Pool",
+		desc: `You may exchange moves within the team.`,
+
+		mod: 'gen8',
+		ruleset: ['Move Pool Mod', 'Standard', 'Dynamax Clause'],
+		banlist: [],
+	},
+	{
+		name: "[Gen 8] Recyclers",
+		desc: `Consumable items can be reused.`,
+
+		mod: 'recyclers',
+		ruleset: ['Standard', 'Dynamax Clause'],
+		banlist: [],
+	},
+
+	{
+		section: "Time Machine",
+		column: 3,
+	},
+
+	{
+		name: "[Gen 7] Time Machine OU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/dex/sm/tags/ou/">USM OU Banlist</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/posts/8162240/">USM OU Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3667522/">USM OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen7',
+		ruleset: ['Standard', 'Time Machine'],
+		banlist: ['Uber', 'Arena Trap', 'Power Construct', 'Shadow Tag', 'Baton Pass'],
+	},
+	{
+		name: "[Gen 6] Time Machine OU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/dex/xy/tags/ou/">ORAS OU Banlist</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/posts/8133793/">ORAS OU Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3623399/">ORAS OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen6',
+		ruleset: ['Standard', 'Swagger Clause', '+Future', 'Time Machine'],
+		banlist: ['Uber', 'Arena Trap', 'Shadow Tag', 'Soul Dew', 'Baton Pass'],
+	},
+	{
+		name: "[Gen 5] Time Machine OU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/posts/8133791/">BW2 Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3658220/">BW2 OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen5',
+		ruleset: ['Standard', 'Evasion Abilities Clause', 'Baton Pass Clause', 'Sleep Moves Clause', 'Swagger Clause', 'Time Machine'],
+		banlist: ['Uber', 'Arena Trap', 'Drizzle ++ Swift Swim', 'Drought ++ Chlorophyll', 'Sand Rush', 'Shadow Tag', 'Soul Dew'],
+	},
+	{
+		name: "[Gen 4] Time Machine OU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3506147/">DPP OU Metagame Discussion</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/posts/8133790/">DPP Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3652538/">DPP OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen4',
+		ruleset: ['Standard', 'Time Machine'],
+		banlist: ['Uber', 'Sand Veil', 'Soul Dew', 'Swinub + Snow Cloak', 'Piloswine + Snow Cloak', 'Mamoswine + Snow Cloak', 'Baton Pass'],
+	},
+	{
+		name: "[Gen 3] Time Machine OU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/posts/8133789/">ADV Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3503019/">ADV OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen3',
+		ruleset: ['Standard', '3 Baton Pass Clause', 'Time Machine'],
+		banlist: ['Uber', 'Smeargle + Baton Pass'],
+	},
+	{
+		name: "[Gen 2] Time Machine OU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/posts/8133788/">GSC Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3556533/">GSC OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen2tm',
+		ruleset: ['Standard', 'Time Machine'],
+		banlist: ['Uber'],
+	},
+	{
+		name: "[Gen 1] Time Machine OU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/posts/8133786/">RBY Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3572352/">RBY OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen1tm',
+		ruleset: ['Standard', 'Time Machine'],
+		banlist: ['Uber'],
+	},
+
+
 	// RoA Spotlight
 	///////////////////////////////////////////////////////////////////
 
 	{
 		section: "RoA Spotlight",
-		column: 3,
+		column: 4,
 	},
 	{
 		name: "[Gen 4] Ubers",
@@ -1618,7 +1746,7 @@ export const Formats: FormatList = [
 
 	{
 		section: "Past Gens OU",
-		column: 3,
+		column: 4,
 	},
 	{
 		name: "[Gen 7] OU",
@@ -1705,7 +1833,7 @@ export const Formats: FormatList = [
 	///////////////////////////////////////////////////////////////////
 	{
 		section: "US/UM Singles",
-		column: 3,
+		column: 4,
 	},
 	{
 		name: "[Gen 7] Ubers",
@@ -1919,7 +2047,7 @@ export const Formats: FormatList = [
 
 	{
 		section: "US/UM Doubles",
-		column: 3,
+		column: 4,
 	},
 	{
 		name: "[Gen 7] Doubles OU",
@@ -2078,7 +2206,7 @@ export const Formats: FormatList = [
 
 	{
 		section: "OR/AS Singles",
-		column: 4,
+		column: 5,
 	},
 	{
 		name: "[Gen 6] Ubers",
@@ -2255,7 +2383,7 @@ export const Formats: FormatList = [
 
 	{
 		section: "OR/AS Doubles/Triples",
-		column: 4,
+		column: 5,
 	},
 	{
 		name: "[Gen 6] Doubles OU",
@@ -2379,7 +2507,7 @@ export const Formats: FormatList = [
 
 	{
 		section: "B2/W2 Singles",
-		column: 4,
+		column: 5,
 	},
 	{
 		name: "[Gen 5] Ubers",
@@ -2517,7 +2645,7 @@ export const Formats: FormatList = [
 
 	{
 		section: 'B2/W2 Doubles',
-		column: 4,
+		column: 5,
 	},
 	{
 		name: "[Gen 5] Doubles OU",

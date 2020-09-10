@@ -959,7 +959,7 @@ export class TeamValidator {
 		let eventSpecies = species;
 		if (source.charAt(1) === 'S') {
 			const splitSource = source.substr(source.charAt(2) === 'T' ? 3 : 2).split(' ');
-			const dex = (this.dex.gen === 1 ? this.dex.mod('gen2') : this.dex);
+			const dex = this.dex.gen === 1 ? this.dex.mod('gen2') : this.dex;
 			eventSpecies = dex.getSpecies(splitSource[1]);
 			const eventLsetData = this.dex.getLearnsetData(eventSpecies.id);
 			eventData = eventLsetData.eventData?.[parseInt(splitSource[0])];
@@ -1027,7 +1027,7 @@ export class TeamValidator {
 		if (!getAll && eggMoves.length <= 1) return true;
 
 		// gen 1 eggs come from gen 2 breeding
-		const dex = this.dex.gen === 1 ? this.dex.mod('gen2') : this.dex;
+		// const dex = this.dex.gen === 1 ? this.dex.mod('gen2') : this.dex;
 		// In Gen 5 and earlier, egg moves can only be inherited from the father
 		// we'll test each possible father separately
 		let eggGroups = species.eggGroups;
@@ -1492,7 +1492,7 @@ export class TeamValidator {
 		const dex = this.dex;
 		let name = set.species;
 		const species = dex.getSpecies(set.species);
-		const maxSourceGen = this.ruleTable.has('allowtradeback') ? 2 : dex.gen;
+		const maxSourceGen = this.ruleTable.has('timemachine') ? 8 : this.ruleTable.has('allowtradeback') ? 2 : dex.gen;
 		if (!eventSpecies) eventSpecies = species;
 		if (set.name && set.species !== set.name && species.baseSpecies !== set.name) name = `${set.name} (${set.species})`;
 
@@ -1636,7 +1636,7 @@ export class TeamValidator {
 		let minSourceGen = this.minSourceGen;
 		if (this.dex.gen >= 3 && minSourceGen < 3) minSourceGen = 3;
 		if (species) minSourceGen = Math.max(minSourceGen, species.gen);
-		const maxSourceGen = this.ruleTable.has('allowtradeback') ? 2 : this.dex.gen;
+		const maxSourceGen = this.ruleTable.has('timemachine') ? 8 : this.ruleTable.has('allowtradeback') ? 2 : this.dex.gen;
 		return new PokemonSources(maxSourceGen, minSourceGen);
 	}
 
@@ -1732,6 +1732,7 @@ export class TeamValidator {
 		set: AnyObject = {}
 	): {type: string, [key: string]: any} | null {
 		const dex = this.dex;
+
 		if (!setSources.size()) throw new Error(`Bad sources passed to checkLearnset`);
 
 		move = dex.getMove(move);
